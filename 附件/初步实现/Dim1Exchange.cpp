@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -7,10 +7,10 @@
 
 using namespace std;
 
-# define GridSize 100
-# define Grid2Size GridSize*GridSize
-# define Grid3Size Grid2Size*GridSize
-# define TimeSteps 1000
+# define GridSize 102
+# define Grid2Size 10404
+# define Grid3Size 1061208
+# define TimeSteps 2000
 
 
 int main()
@@ -21,6 +21,7 @@ int main()
 	int i, j, k, t;
 	double t1, t2;
 	double *Temp;
+	double over6=0.166666666666667;
 
 	srand((unsigned)time(NULL));
 

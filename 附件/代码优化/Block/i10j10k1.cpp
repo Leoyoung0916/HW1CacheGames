@@ -1,0 +1,128 @@
+//#include "stdafx.h"
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <iostream>
+#include <time.h>
+
+using namespace std;
+
+# define GridSize 102
+# define BlockNum 10
+# define BlockSize 10
+# define DoubleTimeSteps 2000
+# define TimeSteps 1000
+
+double ThisGrid[GridSize][GridSize][GridSize] __attribute__((aligned(64)));
+double NextGrid[GridSize][GridSize][GridSize] __attribute__((aligned(64)));
+
+
+int main()
+{
+	
+	int i, j, k, t;
+	int iBlock,jBlock;
+	double t1, t2;
+	double over6=0.166666666666667;
+
+	srand((unsigned)time(NULL));
+
+	// Initiallize
+
+	for (i = 0; i < GridSize; i++)
+	{
+		for (j = 0; j < GridSize; j++)
+		{
+			ThisGrid[i][j][0] = 1;
+			ThisGrid[i][j][GridSize - 1] = 1;
+			ThisGrid[i][0][j] = 1;
+			ThisGrid[i][GridSize - 1][j] = 1;
+			ThisGrid[0][i][j] = 1;
+			ThisGrid[GridSize - 1][i][j] = 1;
+
+			NextGrid[i][j][0] = 1;
+			NextGrid[i][j][GridSize - 1] = 1;
+			NextGrid[i][0][j] = 1;
+			NextGrid[i][GridSize - 1][j] = 1;
+			NextGrid[0][i][j] = 1;
+			NextGrid[GridSize - 1][i][j] = 1;
+
+		}
+	}
+
+	for (int i = 1; i < GridSize - 1; i++)
+	{
+		for (int j = 1; j < GridSize - 1; j++)
+		{
+			for (int k = 1; k < GridSize - 1; k++)
+			{
+				ThisGrid[i][j][k] = rand() / (double)(RAND_MAX);
+			}
+		}
+	}
+
+
+
+	//  iteration
+
+	t1 = clock();
+
+	#pragma vector aligned
+	
+	for (t = 0; t < TimeSteps; t++)
+	{
+		for (iBlock = 0; iBlock < BlockNum; iBlock++)
+		{
+			for (jBlock = 0; jBlock < BlockNum; jBlock++)
+			{
+				for(i=1;i<=BlockSize;i++)
+				{
+					for(j=1;j<=BlockSize;j++)
+					{
+						for(k=1;k<GridSize-1;k++)
+						{
+							NextGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k] = 
+							(ThisGrid[iBlock*BlockSize+i-1][jBlock*BlockSize+j][k]+ 
+							ThisGrid[iBlock*BlockSize+i+1][jBlock*BlockSize+j][k]+ 
+							ThisGrid[iBlock*BlockSize+i][jBlock*BlockSize+j+1][k]+ 
+							ThisGrid[iBlock*BlockSize+i][jBlock*BlockSize+j-1][k]+ 
+							ThisGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k+1]+ 
+							ThisGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k-1]) * 0.166666666666667;							
+						}
+					}
+				}
+			}
+		}
+
+		for (iBlock = 0; iBlock < BlockNum; iBlock++)
+		{
+			for (jBlock = 0; jBlock < BlockNum; jBlock++)
+			{
+				for(i=1;i<=BlockSize;i++)
+				{
+					for(j=1;j<=BlockSize;j++)
+					{
+						for(k=1;k<GridSize-1;k++)
+						{
+							ThisGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k] = 
+							(NextGrid[iBlock*BlockSize+i-1][jBlock*BlockSize+j][k]+ 
+							NextGrid[iBlock*BlockSize+i+1][jBlock*BlockSize+j][k]+ 
+							NextGrid[iBlock*BlockSize+i][jBlock*BlockSize+j+1][k]+ 
+							NextGrid[iBlock*BlockSize+i][jBlock*BlockSize+j-1][k]+ 
+							NextGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k+1]+ 
+							NextGrid[iBlock*BlockSize+i][jBlock*BlockSize+j][k-1]) * 0.166666666666667;							
+						}
+					}
+				}
+			}
+		}
+
+
+	}
+
+	t2 = clock();
+	cout << t2 - t1 << endl;
+
+	return 0;
+
+}

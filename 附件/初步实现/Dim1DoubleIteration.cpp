@@ -1,4 +1,4 @@
-//#include "stdafx.h"
+
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
@@ -7,9 +7,10 @@
 
 using namespace std;
 
-# define GridSize 100
-# define Grid2Size GridSize*GridSize
-# define Grid3Size Grid2Size*GridSize
+# define GridSize 102
+# define Grid2Size 10404
+# define Grid3Size 1061208
+# define DoubleTimeSteps 2000
 # define TimeSteps 1000
 
 
@@ -21,6 +22,7 @@ int main()
 	int i, j, k, t;
 	double t1, t2;
 	double *Temp;
+	double over6=0.166666666666667;
 
 	srand((unsigned)time(NULL));
 
@@ -73,9 +75,23 @@ int main()
 				}
 			}
 		}
-	Temp = ThisGrid;
-	ThisGrid = NextGrid;
-	NextGrid = Temp;
+
+		for (i = 1; i < GridSize - 1; i++)
+		{
+			for (j = 1; j < GridSize - 1; j++)
+			{
+				for (k = 1; k < GridSize - 1; k++)
+				{
+					ThisGrid[i*Grid2Size + j*GridSize + k]
+						= (NextGrid[(i - 1)*Grid2Size + j*GridSize + k]
+						+ NextGrid[(i + 1)*Grid2Size + j*GridSize + k]
+						+ NextGrid[i*Grid2Size + (j + 1)*GridSize + k]
+						+ NextGrid[i*Grid2Size + (j - 1)*GridSize + k]
+						+ NextGrid[i*Grid2Size + j*GridSize + (k + 1)]
+						+ NextGrid[i*Grid2Size + j*GridSize + (k - 1)])/6.0;
+				}
+			}
+		}
 	// cout << ThisGrid[1123] << endl;
 	}
 

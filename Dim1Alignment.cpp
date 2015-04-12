@@ -5,6 +5,7 @@
 #include <iostream>
 #include <time.h>
 
+
 using namespace std;
 
 # define GridSize 100
@@ -16,8 +17,8 @@ using namespace std;
 int main()
 {
 
-	double *ThisGrid = new double[Grid3Size];
-	double *NextGrid = new double[Grid3Size];
+	double *ThisGrid = new double[Grid3Size]  __attribute__((aligned(64)));
+	double *NextGrid = new double[Grid3Size]  __attribute__((aligned(64)));
 	int i, j, k, t;
 	double t1, t2;
 	double *Temp;
@@ -69,7 +70,7 @@ int main()
 						+ ThisGrid[i*Grid2Size + (j + 1)*GridSize + k]
 						+ ThisGrid[i*Grid2Size + (j - 1)*GridSize + k]
 						+ ThisGrid[i*Grid2Size + j*GridSize + (k + 1)]
-						+ ThisGrid[i*Grid2Size + j*GridSize + (k - 1)])/6.0;
+						+ ThisGrid[i*Grid2Size + j*GridSize + (k - 1)])*0.166666666666667;
 				}
 			}
 		}

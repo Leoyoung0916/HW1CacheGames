@@ -7,18 +7,20 @@
 
 using namespace std;
 
-# define GridSize 100
-# define DoubleTimeSteps 1000
-# define TimeSteps DoubleTimeSteps/2
+# define GridSize 102
+# define DoubleTimeSteps 2000
+# define TimeSteps 1000
 
 double ThisGrid[GridSize][GridSize][GridSize];
 double NextGrid[GridSize][GridSize][GridSize];
+
 
 int main()
 {
 	
 	int i, j, k, t;
 	double t1, t2;
+	double over6=0.166666666666667;
 
 	srand((unsigned)time(NULL));
 
@@ -75,7 +77,7 @@ int main()
 					ThisGrid[i][j - 1][k] + 
 					ThisGrid[i][j + 1][k] + 
 					ThisGrid[i][j][k - 1] + 
-					ThisGrid[i][j][k + 1]) / 6.0;
+					ThisGrid[i][j][k + 1]) * 0.166666666666667;
 				}
 			}
 		}
@@ -92,7 +94,7 @@ int main()
 					NextGrid[i][j - 1][k] +
 					NextGrid[i][j + 1][k] +
 					NextGrid[i][j][k - 1] +
-					NextGrid[i][j][k + 1]) / 6.0;
+					NextGrid[i][j][k + 1]) * 0.166666666666667;
 				}
 			}
 		}
